@@ -13,13 +13,13 @@ const Shirt = () => {
     const fullTexture = useTexture(snap.fullDecal);
 
     useFrame((state, delta) => {
-        easing.dampC(materials.lamber1.color, snap.color, 0.25, delta)
+        easing.dampC(materials.lambert1.color, snap.color, 0.25, delta)
     });
 
     const stateString = JSON.stringify(snap);
   return (
     <group key={stateString}>
-        <mesh castShadow geometry={nodes.T_Shirt_male.geometry} material={materials.lamber1} material-roughness={1} dispose={null}>
+        <mesh castShadow geometry={nodes.T_Shirt_male.geometry} material={materials.lambert1} material-roughness={1} dispose={null}>
 
             {snap.isFullTexture && (
                 <Decal 
