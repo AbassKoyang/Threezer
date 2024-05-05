@@ -4,17 +4,17 @@ import { useSnapshot } from 'valtio';
 
 import state from '../store';
 
-const ColorPicker = () => {
+const ColorPicker = ({closeTab}) => {
     const snap = useSnapshot(state);
   return (
     <div className="absolute left-full ml-3">
         <SketchPicker 
          color={snap.color}
          disableAlpha
-         onChange={(color) => state.color = color.hex}
+         onChange={(color) => {state.color = color.hex; closeTab("")}}
         />
     </div>
   )
 }
 
-export default ColorPicker
+export default ColorPicker;

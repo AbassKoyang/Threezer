@@ -27,8 +27,10 @@ const Customizer = () => {
     const generateTabContent = () => {
         switch (activeEditorTab) {
             case "colorpicker":
-                return <ColorPicker />
-            case "filePicker":
+                return <ColorPicker
+                closeTab = {setActiveEditorTab}
+                />
+            case "filepicker":
                 return <FilePicker
                  file={file}
                  setFile={setFile}
@@ -52,8 +54,9 @@ const Customizer = () => {
         if(!prompt){
             return alert("Please enter a prompt")
         }
-
-        setGeneratingImg(true);
+        try {
+            // call backend to generate ai image 
+            setGeneratingImg(true);
             const response = await fetch(config.production.backendUrl,{
                 method: 'POST',
                 headers: {
@@ -64,8 +67,6 @@ const Customizer = () => {
             const data = await response.json();
 
             handleDecals(type, `data:image/png;base64,${data.photo}`);
-        try {
-            // call backend to generate ai image 
         } catch (error) {
             alert(error);
         } finally {
@@ -102,6 +103,7 @@ const handleActiveFilterTab = (tabName) => {
             [tabName]: !prevState[tabName]
         }
     })
+    console.log(snap.isFullTexture, snap.isFullTexture)
 }
 const readFile = (type) => {
     reader(file)
@@ -128,6 +130,7 @@ const readFile = (type) => {
                                 handleClick={()=> setActiveEditorTab(tab.name)}
                             />
                         ))}
+                        {generateTabContent()}
                     </div>
                 </div>
               </motion.div>
@@ -147,7 +150,7 @@ const readFile = (type) => {
                         key={tab.name}
                         tab={tab}
                         isFilterTab
-                        isActiveTab = {activeFilterTab(tab.name)}
+                        isActiveTab = {() => setActiveFilterTab(tab.name)}
                         handleClick={()=> handleActiveFilterTab(tab.name)}
                     />
                ))}
