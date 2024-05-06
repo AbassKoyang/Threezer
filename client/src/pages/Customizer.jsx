@@ -23,6 +23,8 @@ const Customizer = () => {
         logoShirt: true,
         stylishShirt: true
     })
+
+    
     //show tab content depending on activeTab
     const generateTabContent = () => {
         switch (activeEditorTab) {
@@ -57,16 +59,20 @@ const Customizer = () => {
         try {
             // call backend to generate ai image 
             setGeneratingImg(true);
-            const response = await fetch(config.production.backendUrl,{
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ prompt})
-            });
-            const data = await response.json();
 
-            handleDecals(type, `data:image/png;base64,${data.photo}`);
+            const response = await fetch(config.production.backendUrl, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify({
+                prompt,
+              })
+            })
+      
+            const data = await response.json();
+      
+            handleDecals(type, `data:image/png;base64,${data.photo}`)
         } catch (error) {
             alert(error);
         } finally {
@@ -74,36 +80,39 @@ const Customizer = () => {
             setActiveEditorTab("");
         }
     }
+
 const handleDecals = (type, result) => {
     const decalType = DecalTypes[type];
+
     state[decalType.stateProperty] = result;
-    if(!activeFilterTab[decalType.filterTab]){
-        handleActiveFilterTab(decalType.filterTab);
+
+    if(!activeFilterTab[decalType.filterTab]) {
+      handleActiveFilterTab(decalType.filterTab)
     }
-}
+  }
 
 const handleActiveFilterTab = (tabName) => {
     switch (tabName) {
         case "logoShirt":
-            state.isLogoTexture = !activeFilterTab[tabName]
-            break;
+            state.isLogoTexture = !activeFilterTab[tabName];
+          break;
         case "stylishShirt":
-            state.isFullTexture = !activeFilterTab[tabName]
-            break;
-    
+            state.isFullTexture = !activeFilterTab[tabName];
+          break;
         default:
-            state.isLogoTexture = true;
-            state.isFullTexture = false;
-            break;
-    }
-
-    setActiveFilterTab((prevState) => {
+          state.isLogoTexture = true;
+          state.isFullTexture = false;
+          break;
+      }
+  
+      // after setting the state, activeFilterTab is updated
+  
+      setActiveFilterTab((prevState) => {
         return {
-            ...prevState,
-            [tabName]: !prevState[tabName]
+          ...prevState,
+          [tabName]: !prevState[tabName]
         }
-    })
-    console.log(snap.isFullTexture, snap.isFullTexture)
+      })
 }
 const readFile = (type) => {
     reader(file)
@@ -150,7 +159,7 @@ const readFile = (type) => {
                         key={tab.name}
                         tab={tab}
                         isFilterTab
-                        isActiveTab = {() => setActiveFilterTab(tab.name)}
+                        isActiveTab = {activeFilterTab[tab.name]}
                         handleClick={()=> handleActiveFilterTab(tab.name)}
                     />
                ))}
